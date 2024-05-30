@@ -40,9 +40,11 @@ CREATE TABLE IF NOT EXISTS exchangeRates
 
     PRIMARY KEY (name_to, name_from),
     FOREIGN KEY (name_to) REFERENCES countries (name)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (name_from) REFERENCES countries (name)
         ON UPDATE cascade
+        ON DELETE cascade
 );
 
 DROP TABLE IF EXISTS airports;
@@ -84,11 +86,14 @@ CREATE TABLE IF NOT EXISTS flights
 
     PRIMARY KEY (number, date_time),
     FOREIGN KEY (origin_airport) REFERENCES airports (code)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (destination_airport) REFERENCES airports (code)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (airline) REFERENCES airlines (name)
         ON UPDATE cascade
+        ON DELETE cascade
 );
 
 DROP TABLE IF EXISTS favFlights;
@@ -99,9 +104,11 @@ CREATE TABLE IF NOT EXISTS favFlights
 
     PRIMARY KEY (flight_number, traveler_id),
     FOREIGN KEY (traveler_id) REFERENCES travelers (id)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (flight_number) REFERENCES flights (number)
         ON UPDATE cascade
+        ON DELETE cascade
 );
 
 DROP TABLE IF EXISTS trips;
@@ -109,10 +116,13 @@ CREATE TABLE IF NOT EXISTS trips
 (
     id          INTEGER UNIQUE NOT NULL,
     traveler_id INTEGER        NOT NULL,
+    start_date  DATE           NOT NULL,
+    end_date    DATE           NOT NULL,
 
     PRIMARY KEY (id),
     FOREIGN KEY (traveler_id) REFERENCES travelers (id)
         ON UPDATE cascade
+        ON DELETE cascade
 );
 
 DROP TABLE IF EXISTS flightBookings;
@@ -126,11 +136,14 @@ CREATE TABLE IF NOT EXISTS flightBookings
 
     PRIMARY KEY (id),
     FOREIGN KEY (traveler_id) REFERENCES travelers (id)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (trip_id) REFERENCES trips (id)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (flight_number, date_time) REFERENCES flights (number, date_time)
         ON UPDATE cascade
+        ON DELETE cascade
 );
 
 DROP TABLE IF EXISTS dealAdministrators;
@@ -177,11 +190,14 @@ CREATE TABLE IF NOT EXISTS hotelBookings
 
     PRIMARY KEY (id),
     FOREIGN KEY (trip_id) REFERENCES trips (id)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (traveler_id) REFERENCES travelers (id)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (hotel_id) REFERENCES hotels (id)
         ON UPDATE cascade
+        ON DELETE cascade
 );
 
 DROP TABLE IF EXISTS favHotels;
@@ -192,9 +208,11 @@ CREATE TABLE IF NOT EXISTS favHotels
 
     PRIMARY KEY (traveler_id, hotel_id),
     FOREIGN KEY (traveler_id) REFERENCES travelers (id)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (hotel_id) REFERENCES hotels (id)
         ON UPDATE cascade
+        ON DELETE cascade
 );
 
 DROP TABLE IF EXISTS dealInfo;
@@ -210,11 +228,14 @@ CREATE TABLE IF NOT EXISTS dealInfo
 
     PRIMARY KEY (id),
     FOREIGN KEY (admin_id) REFERENCES dealAdministrators (id)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (hotel_id) REFERENCES hotels (id)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (hotel_name) REFERENCES hotels (name)
         ON UPDATE cascade
+        ON DELETE cascade
 );
 
 DROP TABLE IF EXISTS dealImpressions;
@@ -228,9 +249,11 @@ CREATE TABLE IF NOT EXISTS dealImpressions
 
     PRIMARY KEY (id),
     FOREIGN KEY (deal_id) REFERENCES dealInfo (id)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (traveler_id) REFERENCES travelers (id)
         ON UPDATE cascade
+        ON DELETE cascade
 );
 
 DROP TABLE IF EXISTS advertisers;
@@ -259,6 +282,7 @@ CREATE TABLE IF NOT EXISTS adInfo
     PRIMARY KEY (id),
     FOREIGN KEY (advertiser_id) REFERENCES advertisers (id)
         ON UPDATE cascade
+        ON DELETE cascade
 );
 
 DROP TABLE IF EXISTS adImpressions;
@@ -272,7 +296,9 @@ CREATE TABLE IF NOT EXISTS adImpressions
 
     PRIMARY KEY (id),
     FOREIGN KEY (advertiser_id) REFERENCES advertisers (id)
-        ON UPDATE cascade,
+        ON UPDATE cascade
+        ON DELETE cascade,
     FOREIGN KEY (traveler_id) REFERENCES travelers (id)
         ON UPDATE cascade
+        ON DELETE cascade
 );
